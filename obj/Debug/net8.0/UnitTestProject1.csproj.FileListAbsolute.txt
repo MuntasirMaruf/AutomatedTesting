@@ -102,3 +102,4 @@ D:\Projects\.NET\UnitTestProject1\obj\Debug\net8.0\refint\UnitTestProject1.dll
 D:\Projects\.NET\UnitTestProject1\obj\Debug\net8.0\UnitTestProject1.pdb
 D:\Projects\.NET\UnitTestProject1\obj\Debug\net8.0\UnitTestProject1.genruntimeconfig.cache
 D:\Projects\.NET\UnitTestProject1\obj\Debug\net8.0\ref\UnitTestProject1.dll
+D:\Projects\.NET\UnitTestProject1\obj\Debug\net8.0\UnitTestProject1.sourcelink.json

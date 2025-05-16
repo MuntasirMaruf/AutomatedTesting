@@ -13,42 +13,21 @@ namespace UnitTestProject1
 
 
         [Test]
-        public void TestUerCreation()
+        public void TestUserCreation()
         {
             IWebDriver driver = new ChromeDriver();
             driver.Navigate().GoToUrl("https://localhost:44377/User/Registration");
             driver.Manage().Window.Maximize();
 
-            IWebElement fname = driver.FindElement(By.Name("FirstName"));
-            fname.SendKeys("Vladimir");
-            Thread.Sleep(1000);
-
-            IWebElement lname = driver.FindElement(By.Name("LastName"));
-            lname.SendKeys("Putin");
-            Thread.Sleep(1000);
-
-            IWebElement email = driver.FindElement(By.Name("Email"));
-            email.SendKeys("putin@gmail.com");
-            Thread.Sleep(1000);
-
-            IWebElement address = driver.FindElement(By.Name("Address"));
-            address.SendKeys("Moscow");
-            Thread.Sleep(1000);
-
-            IWebElement address1 = driver.FindElement(By.Name("Address"));
-            address.SendKeys("Moscow");
-            Thread.Sleep(1000);
-
-            IWebElement password = driver.FindElement(By.Name("Password"));
-            password.SendKeys("1234");
-            Thread.Sleep(1000);
-
-            IWebElement register_btn = driver.FindElement(By.Name("crate_btn"));
-            register_btn.Click();
-
-            driver.Navigate().GoToUrl("https://localhost:44377");
-
+            // Test Custemer Creation
+            CreateCustomer(driver, "John", "Price", "price@gmail.com", "London, UK", "1111qqqq!");
+            Thread.Sleep(2000);
+            driver.Navigate().GoToUrl("https://localhost:44377/User/Registration");
+            // Test Employee Creation
+            CreateEmployee(driver, "John", "Doe", "jdoe@gmail.com", "Seattle, USA", "qwer1234@");
         }
+
+
 
         [Test]
         public void TestUserLogin()
@@ -102,11 +81,8 @@ namespace UnitTestProject1
             driver.Navigate().GoToUrl("https://localhost:44377");
             driver.Manage().Window.Maximize();
 
-            PerformLogin(driver, "maruf.prottoy26@gmail.com", "123321");
+            PerformLogin(driver, "putin@gmail.com", "1234");
             PerformPlaceOrder(driver);
-
-            driver.Navigate().GoToUrl("https://localhost:44377/Order/Home");
- 
         }
 
         [Test]
@@ -116,10 +92,8 @@ namespace UnitTestProject1
             driver.Navigate().GoToUrl("https://localhost:44377");
             driver.Manage().Window.Maximize();
 
-            PerformLogin(driver, "maruf.prottoy26@gmail.com", "123321");
+            PerformLogin(driver, "putin@gmail.com", "1234");
             PerformCancelOrder(driver);
-
-            driver.Navigate().GoToUrl("https://localhost:44377/Order/Home");
         }
 
         [Test]
@@ -130,7 +104,66 @@ namespace UnitTestProject1
             driver.Manage().Window.Maximize();
 
             PerformLogin(driver, "muntasir.maruf26@gmail.com", "1234");
-            PerformAddProduct(driver);
+            PerformAddProduct(driver, "New Product", "1", "5000", "This is a new product", "400");
+        }
+
+        [Test]
+        public void TestAcceptOrder()
+        {
+            IWebDriver driver = new ChromeDriver();
+            driver.Navigate().GoToUrl("https://localhost:44377");
+            driver.Manage().Window.Maximize();
+
+            AcceptOrder(driver, "18");
+        }
+
+        private void AcceptOrder(IWebDriver driver, string orderId)
+        {
+            PerformLogin(driver, "muntasir.maruf26@gmail.com", "1234");
+
+            driver.FindElement(By.Name("orders_btn")).Click();
+
+            var acceptButton = driver.FindElement(By.Name("accept_btn_" + orderId));
+            Thread.Sleep(1000);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptButton);
+            Thread.Sleep(1000);
+            acceptButton.Click();
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptButton);
+        }
+
+
+
+        private void CreateCustomer(IWebDriver driver, string fname, string lname, string email, string address, string password)
+        {
+            driver.FindElement(By.Name("FirstName")).SendKeys(fname);
+            Thread.Sleep(1000);
+            driver.FindElement(By.Name("LastName")).SendKeys(lname);
+            Thread.Sleep(1000);
+            driver.FindElement(By.Name("Email")).SendKeys(email);
+            Thread.Sleep(1000);
+            driver.FindElement(By.Name("Address")).SendKeys(address);
+            Thread.Sleep(1000);
+            driver.FindElement(By.Name("Password")).SendKeys(password);
+            Thread.Sleep(1000);
+            driver.FindElement(By.Name("crate_btn")).Click();
+        }
+
+
+        private void CreateEmployee(IWebDriver driver, string fname, string lname, string email, string address, string password)
+        {
+            driver.FindElement(By.Name("FirstName")).SendKeys(fname);
+            Thread.Sleep(1000);
+            driver.FindElement(By.Name("LastName")).SendKeys(lname);
+            Thread.Sleep(1000);
+            driver.FindElement(By.Name("Email")).SendKeys(email);
+            Thread.Sleep(1000);
+            driver.FindElement(By.Name("Address")).SendKeys(address);
+            Thread.Sleep(1000);
+            driver.FindElement(By.Name("Password")).SendKeys(password);
+            Thread.Sleep(1000);
+            driver.FindElement(By.Name("IsEmployee")).Click();
+            Thread.Sleep(1000);
+            driver.FindElement(By.Name("crate_btn")).Click();
         }
 
         private void PerformLogin(IWebDriver driver, string emailStr, string passwordStr)
@@ -161,6 +194,8 @@ namespace UnitTestProject1
 
             Thread.Sleep(2000);
             driver.FindElement(By.Name("place_order_btn")).Click();
+            Thread.Sleep(2000);
+            driver.FindElement(By.Name("my_orders_btn")).Click();
         }
 
         public void PerformCancelOrder(IWebDriver driver)
@@ -169,37 +204,31 @@ namespace UnitTestProject1
             driver.FindElement(By.Name("my_orders_btn")).Click();
             Thread.Sleep(2000);
 
-            driver.FindElement(By.Name("details_btn_14")).Click();
+            driver.FindElement(By.Name("details_btn_21")).Click();
             Thread.Sleep(2000);
             driver.FindElement(By.Name("cancle_btn")).Click();
             Thread.Sleep(2000);
         }
 
-        private void PerformAddProduct(IWebDriver driver)
+        private void PerformAddProduct(IWebDriver driver, string productName, string productCategory, string productPrice, string productDescription, string productQuality)
         {
             Thread.Sleep(2000);
             driver.FindElement(By.Name("add_product_btn")).Click();
             Thread.Sleep(2000);
-            IWebElement productName = driver.FindElement(By.Name("Name"));
-            IWebElement productCategory = driver.FindElement(By.Name("Category"));
-            IWebElement productPrice = driver.FindElement(By.Name("Price"));
-            IWebElement productDescription = driver.FindElement(By.Name("Description"));
-            IWebElement productQuantity = driver.FindElement(By.Name("Quantity"));
 
-            productName.SendKeys("Test Product 1");
+            driver.FindElement(By.Name("Name")).SendKeys(productName);
             Thread.Sleep(1000);
-            SelectElement categoryDropdown = new SelectElement(productCategory);
-            categoryDropdown.SelectByValue("2");
+            SelectElement categoryDropdown = new SelectElement(driver.FindElement(By.Name("Category")));
+            categoryDropdown.SelectByValue(productCategory);
             Thread.Sleep(1000);
-            productDescription.SendKeys("This is a test product 2.");
+            driver.FindElement(By.Name("Description")).SendKeys(productDescription);
             Thread.Sleep(1000);
-            productPrice.SendKeys("100");
+            driver.FindElement(By.Name("Price")).SendKeys(productPrice);
             Thread.Sleep(1000);
-            productQuantity.SendKeys("500");
+            driver.FindElement(By.Name("Quantity")).SendKeys(productQuality);
             Thread.Sleep(1000);
 
             driver.FindElement(By.Name("add_btn")).Click();
         }
-
     }
 }
