@@ -35,6 +35,10 @@ namespace UnitTestProject1
             address.SendKeys("Moscow");
             Thread.Sleep(1000);
 
+            IWebElement address1 = driver.FindElement(By.Name("Address"));
+            address.SendKeys("Moscow");
+            Thread.Sleep(1000);
+
             IWebElement password = driver.FindElement(By.Name("Password"));
             password.SendKeys("1234");
             Thread.Sleep(1000);
